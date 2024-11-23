@@ -1,0 +1,27 @@
+import scrapy
+
+class LoginSpider(scrapy.Spider):
+    name = "login_example"
+    start_urls = ["https://example.com/login"]
+
+    def parse(self, response):
+        # Submit login form
+        return scrapy.FormRequest.from_response(
+            response,
+            formdata={"username": "your_username", "password": "your_password"},
+            callback=self.after_login
+        )
+
+    def after_login(self, response):
+        # Check login success
+        if "Dashboard" in response.text:
+            self.logger.info("Login successful!")
+            yield scrapy.Request(url="https://example.com/protected-data", callback=self.parse_data)
+        else:
+            self.logger.error("Login failed!")
+
+    def parse_data(self, response):
+        # Extract protected content
+        items = response.xpath("//div[@class='item']/text()").getall()
+        for item in items:
+            yield {"item": item}
