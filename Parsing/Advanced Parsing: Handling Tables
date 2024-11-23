@@ -1,0 +1,14 @@
+import pandas as pd
+from bs4 import BeautifulSoup
+import requests
+
+url = "https://example.com/table"
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Locate the table
+table = soup.find('table')
+
+# Parse the table into a DataFrame
+df = pd.read_html(str(table))[0]  # Reads HTML table directly
+print(df)
