@@ -1,0 +1,12 @@
+import requests
+
+# API endpoint
+url = "https://api.example.com/data"
+
+# Make a GET request
+response = requests.get(url, headers={"Authorization": "Bearer your_token"})
+data = response.json()
+
+# Parse and print data
+for item in data['results']:
+    print(item['name'], item['value'])
